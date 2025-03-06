@@ -59,7 +59,7 @@
             <button onclick="searchSongs()">Search</button>
         </div>
         <div id="searchResults"></div>
-        <div id="player"></div>
+        <audio id="audioPlayer" controls hidden></audio>
         <div class="playlist">
             <h2>Playlist</h2>
             <ul id="playlist"></ul>
@@ -78,7 +78,7 @@
                         let div = document.createElement("div");
                         div.innerHTML = `
                             <p>${video.snippet.title}</p>
-                            <button onclick="playSong('${video.id.videoId}')">Play</button>
+                            <button onclick="playAudio('${video.id.videoId}')">Play</button>
                             <button onclick="addToPlaylist('${video.id.videoId}', '${video.snippet.title}')">Add to Playlist</button>
                         `;
                         results.appendChild(div);
@@ -86,16 +86,18 @@
                 });
         }
         
-        function playSong(videoId) {
-            document.getElementById("player").innerHTML = `
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            `;
+        function playAudio(videoId) {
+            let audioPlayer = document.getElementById("audioPlayer");
+            let audioUrl = `https://api.vevioz.com/download-audio?url=https://www.youtube.com/watch?v=${videoId}`;
+            audioPlayer.src = audioUrl;
+            audioPlayer.play();
+            audioPlayer.hidden = false;
         }
         
         function addToPlaylist(videoId, title) {
             let playlist = document.getElementById("playlist");
             let li = document.createElement("li");
-            li.innerHTML = `${title} <button onclick="playSong('${videoId}')">Play</button>`;
+            li.innerHTML = `${title} <button onclick="playAudio('${videoId}')">Play</button>`;
             playlist.appendChild(li);
         }
     </script>
