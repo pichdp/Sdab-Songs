@@ -49,6 +49,10 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        audio {
+            margin-top: 10px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -85,15 +89,29 @@
                     });
                 });
         }
-        
+
         function playAudio(videoId) {
             let audioPlayer = document.getElementById("audioPlayer");
-            let audioUrl = `https://api.vevioz.com/download-audio?url=https://www.youtube.com/watch?v=${videoId}`;
-            audioPlayer.src = audioUrl;
-            audioPlayer.play();
-            audioPlayer.hidden = false;
+            let apiURL = `https://www.yt-download.org/api/button/mp3/${videoId}`;
+
+            fetch(apiURL)
+                .then(response => response.text())
+                .then(html => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, 'text/html');
+                    let downloadLink = doc.querySelector('a[download]');
+
+                    if (downloadLink) {
+                        audioPlayer.src = downloadLink.href;
+                        audioPlayer.play();
+                        audioPlayer.hidden = false;
+                    } else {
+                        alert("Audio not found! Try another song.");
+                    }
+                })
+                .catch(error => console.error("Error fetching audio:", error));
         }
-        
+
         function addToPlaylist(videoId, title) {
             let playlist = document.getElementById("playlist");
             let li = document.createElement("li");
