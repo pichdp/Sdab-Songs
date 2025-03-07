@@ -21,18 +21,14 @@ function searchSongs() {
 function playAudio(videoId) {
     let audioPlayer = document.getElementById("audioPlayer");
 
-    fetch(`http://localhost:3000/get-audio?videoId=${videoId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.audioUrl) {
-                audioPlayer.src = data.audioUrl;
-                audioPlayer.play();
-                audioPlayer.hidden = false;
-            } else {
-                alert("Audio not found! Try another song.");
-            }
-        })
-        .catch(error => console.error("Error fetching audio:", error));
+  fetch(`https://your-vercel-app.vercel.app/api/getAudio?videoId=${videoId}`)
+   .then(response => response.json())
+   .then(data => {
+       document.getElementById("audioPlayer").src = data.audioUrl;
+       document.getElementById("audioPlayer").play();
+   })
+   .catch(error => console.error("Error fetching audio:", error));
+
 }
 
 function addToPlaylist(videoId, title) {
